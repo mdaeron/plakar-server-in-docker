@@ -34,6 +34,7 @@ COPY --from=builder /go/bin/plakar /usr/local/bin/plakar
 
 # Copy the entrypoint script and make it executable
 COPY entrypoint.sh /entrypoint.sh
+COPY scheduler.yaml /scheduler.yaml
 RUN chmod +x /entrypoint.sh
 
 # ─────── Runtime configuration via environment variables ───────

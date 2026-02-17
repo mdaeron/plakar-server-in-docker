@@ -74,4 +74,5 @@ fi
 # 'exec' replaces this shell so plakar becomes PID 1 and receives signals
 # (e.g. SIGTERM from 'docker stop') directly.
 echo "==> Starting plakar server on ${PLAKAR_LISTEN}"
+# exec su-exec "${PUID}:${PGID}" plakar scheduler start -tasks /scheduler.yaml
 exec su-exec "${PUID}:${PGID}" plakar at "${PLAKAR_STORE}" server -listen "${PLAKAR_LISTEN}"
