@@ -1,0 +1,48 @@
+services:
+  plakar:
+    # Build the image from the Dockerfile in this directory.
+    # If you later push the image to a registry, replace 'build' with 'image'.
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: plakar
+
+    # Restart policy: bring the container back up automatically unless
+    # you explicitly stop it with 'docker compose down'.
+    restart: unless-stopped
+
+    environment:
+      # Match these to the owner of your Unraid share (check with ls -lan).
+      - PUID=99
+      - PGID=100
+      # Address the server listens on inside the container.
+      # 0.0.0.0 means all interfaces; the port mapping below controls
+      # which host port it is exposed on.
+      - PLAKAR_LISTEN=0.0.0.0:9876
+      # The passphrase is pulled from the .env file in this directory.
+      # The bare variable name (no = sign) tells Compose to forward the value
+      # from the .env file into the container's environment without ever
+      # writing the secret into this file.
+      - PLAKAR_PASSPHRASE
+
+    volumes:
+      # Format: <host_path>:<container_path>
+      # The host path is your Unraid share directory.
+      # The container path must match PLAKAR_STORE in the Dockerfile (default: /kloset).
+      - /mnt/user/kloset:/kloset
+
+    ports:
+      # Format: <host_port>:<container_port>
+      # Exposing only on the local LAN: omit a specific host IP to listen on all
+      # interfaces of the Unraid host, or prefix with your LAN IP to be explicit:
+      #   - "192.168.1.50:9876:9876"
+      - "9876:9876"
+
+    # Optional: attach to a custom Docker network if you use one in Unraid
+    # networks:
+    #   - homelab
+
+# networks:
+#   homelab:
+#     external: true
